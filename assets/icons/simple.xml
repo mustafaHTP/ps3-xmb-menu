@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<theme>
+
+	<infotable>
+		<info
+			name="sample(simple)"
+			icon="icon.png"
+			url="http://www.scei.co.jp/"
+			author="scei"
+			authoricon="authoricon.png"
+			genre="others"
+			version="version 1.0"
+			comment="this is a sample theme."
+			preview="preview.png"
+		/>
+		<localizedinfo
+			locale="en"
+			name="sample(simple)"
+		/>
+		<localizedinfo
+			locale="jp"
+			name="サンプル(シンプル)"
+			comment="これはサンプルテーマファイルです。"
+		/>
+	</infotable>
+
+    <icontable>
+
+		<!-- horizontal icon -->
+    	<icon id="icon_user" src="Icons.6.png" />
+    	<icon id="icon_setting" src="Icons.35.png" />
+    	<icon id="icon_photo" src="Icons.1.png" />
+    	<icon id="icon_music" src="Icons.16.png" />
+    	<icon id="icon_video" src="Icons.38.png" />
+    	<icon id="icon_game" src="Icons.39.png" />
+    	<icon id="icon_network" src="Icons.18.png" />
+    	<icon id="icon_friend" src="Icons.9.png" />
+    	<icon id="icon_tv" src="Icons.41.png" />
+    	
+		<!-- user -->
+    	<icon id="icon_poweroff" src="Icons.62.png" />
+    	<icon id="icon_newuser" src="Icons.37.png" />
+
+		<!-- setting -->
+    	<icon id="icon_update" src="Icons.17.png" />
+    	<icon id="icon_game_setting" src="Icons.27.png" />
+    	<icon id="icon_bdvd_setting" src="Icons.67.png" />
+    	<icon id="icon_music_setting" src="Icons.29.png" />
+    	<icon id="icon_chat_setting" src="Icons.24.png" />
+    	<icon id="icon_system_setting" src="Icons.36.png" />
+    	<icon id="icon_theme_setting" src="Icons.23.png" />
+    	<icon id="icon_datetime_setting" src="Icons.25.png" />
+    	<icon id="icon_powersave_setting" src="Icons.68.png" />
+    	<icon id="icon_accessory" src="Icons.28.png" />
+    	<icon id="icon_printer_setting" src="Icons.31.png" />
+    	<icon id="icon_display_setting" src="Icons.26.png" />
+    	<icon id="icon_sound_setting" src="Icons.34.png" />
+    	<icon id="icon_security_setting" src="Icons.33.png" />
+    	<icon id="icon_remoteplay_setting" src="Icons.32.png" />
+    	<icon id="icon_network_setting" src="Icons.30.png" />
+
+		<!-- setting submenu -->
+    	<icon id="icon_setting_item" src="Icons.3.png" />
+
+		<!-- photo / music / video -->
+    	<icon id="icon_photo_default" src="Photo_Default_PS3.png" />
+    	<icon id="icon_photo_album_default" src="Photo_Default_Thumb.png" />
+    	<icon id="icon_music_default" src="Music_Default_PS3.png" />
+    	<icon id="icon_music_album_default" src="Music_Default_Thumb.png" />
+    	<icon id="icon_video_default" src="Video_Default_PS3.png" />
+    	<icon id="icon_video_album_default" src="Video_Default_Thumb.png" />
+
+    	<icon id="icon_playing" src="Icons.63.png" />
+    	<icon id="icon_mediaserver_search" src="Icons.13.png" />
+
+    	<icon id="icon_playlist" src="Icons.60.png" />
+    	<icon id="icon_playlist_add" src="Icons.61.png" />
+
+    	<icon id="icon_ms" src="Icons.50.png" />
+    	<icon id="icon_sd" src="Icons.53.png" />
+    	<icon id="icon_cf" src="Icons.52.png" />
+    	<icon id="icon_usb" src="Icons.54.png" />
+    	<icon id="icon_pspms" src="Icons.43.png" />
+    	<icon id="icon_usbcamera" src="Icons.45.png" />
+    	<icon id="icon_usbaad" src="Icons.51.png" />
+
+		<!-- game -->
+    	<icon id="icon_gamedata" src="Icons.8.png" />
+    	<icon id="icon_savedata" src="Icons.14.png" />
+    	<icon id="icon_vmc" src="Icons.5.png" />
+    	<icon id="icon_newvmc" src="Icons.20.png" />
+    	<icon id="icon_trophy" src="Icons.66.png" />
+
+		<!-- network -->
+    	<icon id="icon_onlinemanual" src="Icons.40.png" />
+    	<icon id="icon_remoteplay" src="Icons.21.png" />
+    	<icon id="icon_inet_search" src="Icons.64.png" />
+    	<icon id="icon_browser" src="Icons.2.png" />
+    	<icon id="icon_download" src="Icons.49.png" />
+
+		<!-- psn -->
+    	<icon id="icon_accountmanage" src="Icons.7.png" />
+
+		<!-- friend -->
+    	<icon id="icon_blocklist" src="Icons.10.png" />
+    	<icon id="icon_addfriend" src="Icons.11.png" />
+    	<icon id="icon_playermet" src="Icons.12.png" />
+    	<icon id="icon_chat" src="Icons.4.png" />
+    	<icon id="icon_chatroom" src="ChatRoom_Default_PS3_new.png" />
+    	<icon id="icon_chatroom_text" src="ChatRoom_Text_Default_PS3.png" />
+    	<icon id="icon_mbox" src="Icons.15.png" />
+
+    	<icon id="icon_mbox_received" src="Icons.47.png" />
+    	<icon id="icon_mbox_sent" src="Icons.48.png" />
+    	<icon id="icon_mbox_create" src="Icons.46.png" />
+
+    	<!--
+    	<icon id="icon_default_h" src="Icons.40.png" />
+    	<icon id="icon_default_v" src="Icons.40.png" />
+    	-->
+
+    </icontable>
+
+    <pointertable>
+    	<pointer id="pointer_arrow" src="pointer_arrow.png" base_x="20" base_y="2" />
+    	<pointer id="pointer_finger" src="pointer_finger.png" base_x="16" base_y="10" />
+    	<pointer id="pointer_click" src="pointer_click.png" base_x="16" base_y="10" />
+    	<pointer id="pointer_pen" src="pointer_pen.png" base_x="6" base_y="38" />
+    	<pointer id="pointer_hand" src="pointer_hand.png" base_x="23" base_y="17" />
+    	<pointer id="pointer_grab" src="pointer_grab.png" base_x="23" base_y="17" />
+    </pointertable>
+
+	<notification src="notification.png" />
+
+    <bgimagetable>
+    	<bgimage hd="a_HD.jpg" sd="a_SD.jpg" />
+    	<bgimage hd="b_HD.jpg" sd="b_SD.jpg" />
+    	<bgimage hd="c_HD.jpg" sd="c_SD.jpg" />
+    </bgimagetable>
+
+    <font selection="2" />
+
+    <color selection="4" />
+
+
+</theme>

@@ -1,27 +1,55 @@
 body {
     width: 100vw;
     height: 100vh;
-    background-image: url(/assets/background.jpg);
+    background-image: url(/assets/img/background.jpg);
     background-position: center;
-    /* Center the image */
     background-repeat: no-repeat;
-    /* Do not repeat the image */
     background-size: cover;
+    overflow: hidden;
+    color: white;
+    font-family: "SCE-PS3 Rodin LATIN Regular";
 }
 
 .menu-container {
+    margin: 5%;
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .menu-item {
+    position: relative;
     display: flex;
     flex-direction: column;
+    flex-grow: 0;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    border: 5px solid black;
-    width: 200px;
-    height: 200px;
+    border: 5px solid rgb(255, 255, 255);
+    width: 500px;
+    height: 600px;
     margin: 10px;
+    transition: transform 0.2s ease-in;
+}
+
+/* Empty container to activate sub elements of menu item*/
+.menu-item-active {
+    
+}
+
+.menu-item-active .menu-item-icon {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.menu-item-icon{
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    top: 20%;
+    left: 10%;
+    opacity: 0.5;
+    transition: transform 0.4s ease, opacity 0.3s ease;
 }
 
 .active-menu-item {
@@ -29,11 +57,38 @@ body {
     color: white;
 }
 
+.sub-menu-item-container{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 50%;
+}
+
 .sub-menu-item {
-    border: 5px solid black;
-    width: 50px;
-    height: 50px;
+    display: flex;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-direction: row;
+    border: 5px solid rgb(255, 255, 255);
+    width: 400px;
+    height: 150px;
     margin: 5px;
+    transition: transform 150ms ease-in;
+}
+
+.sub-menu-item-icon{
+    display: flex;
+    width: 150px;
+    height: 150px;
+}
+
+.sub-menu-item-content{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
 }
 
 .active-sub-menu-item {
@@ -51,5 +106,5 @@ body {
 
 .bg-status {
     background-color: black;
-    opacity: 0.2;
+    opacity: 0.4;
 }
