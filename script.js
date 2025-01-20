@@ -12,8 +12,9 @@ let isTransitioningHorizontally = false;
 let isTransitioningVertically = false;
 let isStatusBarVisible = true;
 const menuItemsMovementAmount = 200;
-const subMenuItemsMovementAmount = 250;
-const subMenuItemsMovementOffset = 100;
+const subMenuItemsMovementAmount = 159.8;
+const subMenuItemsMovementOffset = 0;
+const noSubMenuItemCount = -1
 let activeMenuItemIndex = 0;
 const menuItemsData = [];
 
@@ -25,7 +26,9 @@ function buildMenuItemsData() {
         //get child count
         //first get sub menu items container
         const subMenuItemContainer = menuItem.querySelector('.sub-menu-item-container');
-        const childCount = subMenuItemContainer.children.length;
+        let subMenuItemCount = subMenuItemContainer ?
+            subMenuItemContainer.children.length
+            : noSubMenuItemCount;
 
         //get menu item index
         const menuItemIndex = index;
@@ -35,7 +38,7 @@ function buildMenuItemsData() {
         //push data
         menuItemsData.push(
             {
-                childCount,
+                subMenuItemCount,
                 menuItemIndex,
                 activeSubMenuItemIndex,
                 subMenuItemContainer,
@@ -44,25 +47,25 @@ function buildMenuItemsData() {
 }
 
 function addBodyListener() {
-    document.body.addEventListener('keydown', (event) => {
+    document.body.addEventListener('keydown', async (event) => {
 
         let direction;
 
         if (event.key === 'ArrowLeft') {
             direction = DIRECTION.Left;
-            moveMenuItemsHorizontally(direction);
+            await moveMenuItemsHorizontally(direction);
         }
         else if (event.key === 'ArrowRight') {
             direction = DIRECTION.Right;
-            moveMenuItemsHorizontally(direction);
+            await moveMenuItemsHorizontally(direction);
 
         } else if (event.key === 'ArrowUp') {
             direction = DIRECTION.Up;
-            moveSubMenuItemsVertically(direction);
+            await moveSubMenuItemsVertically(direction);
 
         } else if (event.key === 'ArrowDown') {
             direction = DIRECTION.Down;
-            moveSubMenuItemsVertically(direction);
+            await moveSubMenuItemsVertically(direction);
         }
 
         if (event.key === 't') {
@@ -108,17 +111,22 @@ async function moveMenuItemsHorizontally(direction) {
     });
 
     // Wait for transition to end
-    menuItems.forEach((menuItem) => {
-        menuItem.addEventListener('transitionend', () => { isTransitioningHorizontally = false });
-    });
+    menuItems[0].addEventListener('transitionend', () => { isTransitioningHorizontally = false });
 }
 
 async function moveSubMenuItemsVertically(direction) {
     //Check can move vertically
     //First active sub menu item index
     const activeMenuItem = menuItemsData.find(item => item.menuItemIndex === activeMenuItemIndex);
-    const subMenuItemsCount = activeMenuItem.childCount;
+    const subMenuItemsCount = activeMenuItem.subMenuItemCount;
     const activeSubMenuItemIndex = activeMenuItem.activeSubMenuItemIndex;
+
+    //Check if menu item has sub menu items
+    if (!activeMenuItem.subMenuItemCount === noSubMenuItemCount) {
+        log(LOG_TYPE.WARNING, 'No sub menu items');
+
+        return;
+    }
 
     if (!(direction === DIRECTION.Down && activeSubMenuItemIndex < subMenuItemsCount - 1 || direction === DIRECTION.Up && activeSubMenuItemIndex > 0)) {
         console.log('Can not move vertically');
@@ -132,7 +140,7 @@ async function moveSubMenuItemsVertically(direction) {
         return;
     }
 
-    isTransitioningVertically = true;
+    /* isTransitioningVertically = true; */
 
     changeActiveSubMenuItemIndex(direction);
     updateActiveSubMenuItemStyle();
@@ -154,12 +162,13 @@ async function moveSubMenuItemsVertically(direction) {
         let transformAmount = applyOffset ?
             currentTranslateY + ((subMenuItemsMovementAmount + subMenuItemsMovementOffset) * direction)
             : currentTranslateY + (subMenuItemsMovementAmount * direction);
-        selectionItem.style.transform = `translateY(${transformAmount}px)`;
+        selectionItem.style.transform = `translateY(${Math.round(transformAmount)}px)`;
     });
 
-    subMenuItems.forEach((subMenuItem) => {
-        subMenuItem.addEventListener('transitionend', () => { isTransitioningVertically = false });
-    });
+    await waitForTransition(subMenuItems[0]);
+    isTransitioningHorizontally = false;
+
+    /* subMenuItems[0].addEventListener('transitionend', () => { isTransitioningVertically = false }); */
 }
 
 function getTranslateX(element) {
@@ -211,18 +220,30 @@ function updateStyleActiveMenuItem() {
         const menuItemHeader = menuItem.querySelector('.menu-item-description');
         menuItemHeader.classList.remove('active-menu-item-description');
 
+        //check if menu item has sub menu items
         const subMenuItemContainer = menuItem.querySelector('.sub-menu-item-container');
-        subMenuItemContainer.classList.remove('active-sub-menu-item-container');
+        if (subMenuItemContainer) {
+            subMenuItemContainer.classList.remove('active-sub-menu-item-container');
+        }
     })
 
     //add active class to the active menu item
     menuItems[activeMenuItemIndex].querySelector('.menu-item-icon').classList.add('active-menu-item-icon');
     menuItems[activeMenuItemIndex].querySelector('.menu-item-description').classList.add('active-menu-item-description');
-    menuItems[activeMenuItemIndex].querySelector('.sub-menu-item-container').classList.add('active-sub-menu-item-container');
+    if (menuItems[activeMenuItemIndex].querySelector('.sub-menu-item-container')) {
+        menuItems[activeMenuItemIndex].querySelector('.sub-menu-item-container').classList.add('active-sub-menu-item-container');
+    }
 }
 
 function updateActiveSubMenuItemStyle() {
+
     const activeMenuItem = getActiveMenuItem();
+    if (activeMenuItem.subMenuItemCount === noSubMenuItemCount) {
+        log(LOG_TYPE.WARNING, 'No sub menu items');
+
+        return;
+    }
+
     const subMenuItems = Array.from(activeMenuItem.subMenuItemContainer.children);
 
     //first remove active class from all menu items
@@ -251,6 +272,15 @@ function getActiveMenuItem() {
     return menuItemsData.find(item => item.menuItemIndex === activeMenuItemIndex);
 }
 
+function waitForTransition(element) {
+    return new Promise((resolve) => {
+        const handler = () => {
+            element.removeEventListener('transitionend', handler);
+            resolve();
+        };
+        element.addEventListener('transitionend', handler);
+    });
+}
 
 buildMenuItemsData();
 addBodyListener();
