@@ -12,8 +12,8 @@ let isTransitioningHorizontally = false;
 let isTransitioningVertically = false;
 let isStatusBarVisible = true;
 const menuItemsMovementAmount = 200;
-const subMenuItemsMovementAmount = 159.8;
-const subMenuItemsMovementOffset = 0;
+const subMenuItemsMovementAmount = 160;
+const subMenuItemsMovementOffset = 150;
 const noSubMenuItemCount = -1
 let activeMenuItemIndex = 0;
 const menuItemsData = [];
@@ -110,8 +110,8 @@ async function moveMenuItemsHorizontally(direction) {
         menuItem.style.transform = `translateX(${currentTranslateX + (menuItemsMovementAmount * -direction)}px)`;
     });
 
-    // Wait for transition to end
-    menuItems[0].addEventListener('transitionend', () => { isTransitioningHorizontally = false });
+    await waitForAllTransitions(menuItems);
+    isTransitioningHorizontally = false;
 }
 
 async function moveSubMenuItemsVertically(direction) {
@@ -140,7 +140,7 @@ async function moveSubMenuItemsVertically(direction) {
         return;
     }
 
-    /* isTransitioningVertically = true; */
+    isTransitioningVertically = true;
 
     changeActiveSubMenuItemIndex(direction);
     updateActiveSubMenuItemStyle();
@@ -162,13 +162,13 @@ async function moveSubMenuItemsVertically(direction) {
         let transformAmount = applyOffset ?
             currentTranslateY + ((subMenuItemsMovementAmount + subMenuItemsMovementOffset) * direction)
             : currentTranslateY + (subMenuItemsMovementAmount * direction);
-        selectionItem.style.transform = `translateY(${Math.round(transformAmount)}px)`;
+        selectionItem.style.transform = `translateY(${transformAmount}px)`;
     });
 
-    await waitForTransition(subMenuItems[0]);
-    isTransitioningHorizontally = false;
+    // Wait for the transition to complete
+    await waitForAllTransitions(subMenuItems);
 
-    /* subMenuItems[0].addEventListener('transitionend', () => { isTransitioningVertically = false }); */
+    isTransitioningVertically = false;
 }
 
 function getTranslateX(element) {
@@ -272,17 +272,26 @@ function getActiveMenuItem() {
     return menuItemsData.find(item => item.menuItemIndex === activeMenuItemIndex);
 }
 
-function waitForTransition(element) {
+function waitForAllTransitions(elements){
     return new Promise((resolve) => {
-        const handler = () => {
-            element.removeEventListener('transitionend', handler);
-            resolve();
+        let completedTransitions = 0;
+        const totalTransitions = elements.length;
+
+        const onTransitionEnd = (event) => {
+            completedTransitions++;
+            if (completedTransitions === totalTransitions) {
+                elements.forEach((el) => el.removeEventListener('transitionend', onTransitionEnd));
+                resolve();
+            }
         };
-        element.addEventListener('transitionend', handler);
+
+        elements.forEach((element) => {
+            element.addEventListener('transitionend', onTransitionEnd);
+        });
     });
 }
 
 buildMenuItemsData();
 addBodyListener();
 
-console.log(menuItemsData);
+log(LOG_TYPE.INFO, 'Script loaded');
