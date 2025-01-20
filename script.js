@@ -9,7 +9,7 @@ const DIRECTION = {
 
 let isStatusBarVisible = true;
 const menuItemsMovementAmount = 200;
-const subMenuItemsMovementAmount = 100;
+const subMenuItemsMovementAmount = 50;
 const subMenuItemsCount = 3;
 const menuItemCount = 3;
 let activeMenuItemIndex = 0;
@@ -44,7 +44,7 @@ function addBodyListener() {
         } else if (event.key === 'ArrowUp') {
             direction = DIRECTION.Up;
             moveSubMenuItemsVertically(direction);
-            
+
         } else if (event.key === 'ArrowDown') {
             direction = DIRECTION.Down;
             moveSubMenuItemsVertically(direction);
@@ -87,11 +87,11 @@ function moveMenuItemsHorizontally(direction) {
 function moveSubMenuItemsVertically(direction) {
     //Check can move vertically
     //First active sub menu item index
-    const activeSubMenuItemIndex = menuItemSubMenuIndices.find(item => item.menuItemIndex === activeMenuItemIndex).activeSubMenuItemIndex;
+    const activeSubMenuItemIndex = getActiveSubMenuItemIndex();
 
     console.log(`active sub menu items index: ${activeSubMenuItemIndex}`);
 
-    if(!(direction === DIRECTION.Down && activeSubMenuItemIndex < subMenuItemsCount - 1 || direction === DIRECTION.Up && activeSubMenuItemIndex > 0)) {
+    if (!(direction === DIRECTION.Down && activeSubMenuItemIndex < subMenuItemsCount - 1 || direction === DIRECTION.Up && activeSubMenuItemIndex > 0)) {
         console.log('Can not move vertically');
 
         return;
@@ -102,15 +102,25 @@ function moveSubMenuItemsVertically(direction) {
 
     //Get selected menu item
     const menuItems = document.querySelectorAll('.menu-item');
-    const selectedMenuItem = menuItems[activeMenuItemIndex];
+    const activeMenuItem = menuItems[activeMenuItemIndex];
 
     //Get selected menu item's children (selection items)
-    const selectionItems = Array.from(selectedMenuItem.children);
-    console.log(selectionItems);
-
-    selectionItems.forEach((selectionItem) => {
+    const subMenuItems = Array.from(activeMenuItem.children);
+    subMenuItems.forEach((selectionItem, index) => {
         const currentTranslateY = getTranslateY(selectionItem);
-        selectionItem.style.transform = `translateY(${currentTranslateY + (subMenuItemsMovementAmount * direction)}px)`;
+        let applyOffsetIndex;
+        if (direction === DIRECTION.Down) {
+            applyOffsetIndex = activeSubMenuItemIndex;
+        }
+        else if (direction === DIRECTION.Up) {
+            applyOffsetIndex = activeSubMenuItemIndex - 1;
+        }
+        const applyOffset = index === applyOffsetIndex;
+        const offset = 50;
+        let transformAmount = applyOffset ?
+            currentTranslateY + ((subMenuItemsMovementAmount + offset) * direction)
+            : currentTranslateY + (subMenuItemsMovementAmount * direction);
+        selectionItem.style.transform = `translateY(${transformAmount}px)`;
     });
 }
 
@@ -134,14 +144,14 @@ function changeActiveMenuItemIndex(direction) {
     }
 }
 
-function changeActiveSubMenuItemIndex(direction){
+function changeActiveSubMenuItemIndex(direction) {
     //Check can move vertically
     //First active sub menu item index
     const activeMenuItemIndexItem = menuItemSubMenuIndices.find(item => item.menuItemIndex === activeMenuItemIndex);
 
     if (direction === DIRECTION.Down) {
         activeMenuItemIndexItem.activeSubMenuItemIndex++;
-    }else if (direction === DIRECTION.Up) {
+    } else if (direction === DIRECTION.Up) {
         activeMenuItemIndexItem.activeSubMenuItemIndex--;
     }
 }
@@ -168,7 +178,7 @@ function updateStyleActiveMenuItem() {
     menuItems[activeMenuItemIndex].classList.add('active-menu-item');
 }
 
-function updateActiveSubMenuItemStyle(){
+function updateActiveSubMenuItemStyle() {
     const menuItems = document.querySelectorAll('.menu-item');
     const activeMenuItem = menuItems[activeMenuItemIndex];
     const subMenuItems = Array.from(activeMenuItem.children);
@@ -187,4 +197,8 @@ function toggleStatusBar() {
     isStatusBarVisible = !isStatusBarVisible;
     const statusBar = document.querySelector('.status-bar');
     statusBar.style.display = isStatusBarVisible ? 'block' : 'none';
+}
+
+function getActiveSubMenuItemIndex() {
+    return menuItemSubMenuIndices.find(item => item.menuItemIndex === activeMenuItemIndex).activeSubMenuItemIndex;
 }
