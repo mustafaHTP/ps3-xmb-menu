@@ -1,29 +1,30 @@
 addBodyListener();
 
 const DIRECTION = {
-    Left: 1,
-    Right: -1,
+    Left: -1,
+    Right: 1,
     Up: 1,
     Down: -1
 }
 
 let isStatusBarVisible = true;
 const menuItemsMovementAmount = 200;
-const subMenuItemsMovementAmount = 50;
+const subMenuItemsMovementAmount = 100;
+const subMenuItemsCount = 3;
 const menuItemCount = 3;
 let activeMenuItemIndex = 0;
-const activeSelectionItemsIndex = [
+const menuItemSubMenuIndices = [
     {
         menuItemIndex: 0,
-        activeSelectionItemIndex: 0
+        activeSubMenuItemIndex: 0
     },
     {
         menuItemIndex: 1,
-        activeSelectionItemIndex: 0
+        activeSubMenuItemIndex: 0
     },
     {
         menuItemIndex: 2,
-        activeSelectionItemIndex: 0
+        activeSubMenuItemIndex: 0
     }
 ];
 
@@ -42,11 +43,11 @@ function addBodyListener() {
 
         } else if (event.key === 'ArrowUp') {
             direction = DIRECTION.Up;
-            moveSelectionItemsVertically(direction);
+            moveSubMenuItemsVertically(direction);
             
         } else if (event.key === 'ArrowDown') {
             direction = DIRECTION.Down;
-            moveSelectionItemsVertically(direction);
+            moveSubMenuItemsVertically(direction);
         }
 
         if (event.key === 't') {
@@ -60,7 +61,7 @@ function addBodyListener() {
 function moveMenuItemsHorizontally(direction) {
 
     // Check can move horizontally
-    if (!(direction === 1 && activeMenuItemIndex < menuItemCount - 1 || direction === -1 && activeMenuItemIndex > 0)) {
+    if (!(direction === DIRECTION.Right && activeMenuItemIndex < menuItemCount - 1 || direction === DIRECTION.Left && activeMenuItemIndex > 0)) {
         console.log('Can not move horizontally');
 
         return;
@@ -68,6 +69,9 @@ function moveMenuItemsHorizontally(direction) {
 
     // Change active menu item index
     changeActiveMenuItemIndex(direction);
+
+    // Change style of active menu item
+    updateStyleActiveMenuItem();
 
 
     // Get all menu items
@@ -80,7 +84,22 @@ function moveMenuItemsHorizontally(direction) {
     });
 }
 
-function moveSelectionItemsVertically(direction) {
+function moveSubMenuItemsVertically(direction) {
+    //Check can move vertically
+    //First active sub menu item index
+    const activeSubMenuItemIndex = menuItemSubMenuIndices.find(item => item.menuItemIndex === activeMenuItemIndex).activeSubMenuItemIndex;
+
+    console.log(`active sub menu items index: ${activeSubMenuItemIndex}`);
+
+    if(!(direction === DIRECTION.Down && activeSubMenuItemIndex < subMenuItemsCount - 1 || direction === DIRECTION.Up && activeSubMenuItemIndex > 0)) {
+        console.log('Can not move vertically');
+
+        return;
+    }
+
+    changeActiveSubMenuItemIndex(direction);
+    updateActiveSubMenuItemStyle();
+
     //Get selected menu item
     const menuItems = document.querySelectorAll('.menu-item');
     const selectedMenuItem = menuItems[activeMenuItemIndex];
@@ -115,6 +134,18 @@ function changeActiveMenuItemIndex(direction) {
     }
 }
 
+function changeActiveSubMenuItemIndex(direction){
+    //Check can move vertically
+    //First active sub menu item index
+    const activeMenuItemIndexItem = menuItemSubMenuIndices.find(item => item.menuItemIndex === activeMenuItemIndex);
+
+    if (direction === DIRECTION.Down) {
+        activeMenuItemIndexItem.activeSubMenuItemIndex++;
+    }else if (direction === DIRECTION.Up) {
+        activeMenuItemIndexItem.activeSubMenuItemIndex--;
+    }
+}
+
 function updateStatusBar() {
     //Update selected menu item index display
     const selectedMenuItemIndexDisplay = document.querySelector('#active-menu-item-index-display');
@@ -135,6 +166,21 @@ function updateStyleActiveMenuItem() {
 
     //add active class to the active menu item
     menuItems[activeMenuItemIndex].classList.add('active-menu-item');
+}
+
+function updateActiveSubMenuItemStyle(){
+    const menuItems = document.querySelectorAll('.menu-item');
+    const activeMenuItem = menuItems[activeMenuItemIndex];
+    const subMenuItems = Array.from(activeMenuItem.children);
+
+    //first remove active class from all menu items
+    subMenuItems.forEach(menuItem => {
+        menuItem.classList.remove('active-sub-menu-item');
+    })
+
+    const activeSubMenuItemIndex = menuItemSubMenuIndices.find(item => item.menuItemIndex === activeMenuItemIndex).activeSubMenuItemIndex;
+    //add active class to the active menu item
+    subMenuItems[activeSubMenuItemIndex].classList.add('active-sub-menu-item');
 }
 
 function toggleStatusBar() {

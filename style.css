@@ -25,6 +25,10 @@
     margin: 5px;
 }
 
+.active-sub-menu-item{
+    background-color: chocolate;
+}
+
 /* STATUS BAR */
 
 .status-bar{
