@@ -1,3 +1,14 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    background-image: url(/assets/background.jpg);
+    background-position: center;
+    /* Center the image */
+    background-repeat: no-repeat;
+    /* Do not repeat the image */
+    background-size: cover;
+}
+
 .menu-container {
     display: flex;
 }
@@ -25,20 +36,20 @@
     margin: 5px;
 }
 
-.active-sub-menu-item{
+.active-sub-menu-item {
     background-color: chocolate;
 }
 
 /* STATUS BAR */
 
-.status-bar{
+.status-bar {
     display: fixed;
     color: white;
 }
 
 /* END - STATUS BAR */
 
-.bg-status{
+.bg-status {
     background-color: black;
     opacity: 0.2;
 }
