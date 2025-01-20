@@ -1,9 +1,8 @@
-
-.menu-container{
+.menu-container {
     display: flex;
 }
 
-.menu-item{
+.menu-item {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -14,9 +13,28 @@
     margin: 10px;
 }
 
-.selection-item{
+.active-menu-item {
+    background-color: green;
+    color: white;
+}
+
+.sub-menu-item {
     border: 5px solid black;
     width: 50px;
     height: 50px;
     margin: 5px;
+}
+
+/* STATUS BAR */
+
+.status-bar{
+    display: fixed;
+    color: white;
+}
+
+/* END - STATUS BAR */
+
+.bg-status{
+    background-color: black;
+    opacity: 0.2;
 }
