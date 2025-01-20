@@ -12,8 +12,8 @@ let isTransitioningHorizontally = false;
 let isTransitioningVertically = false;
 let isStatusBarVisible = true;
 const menuItemsMovementAmount = 200;
-const subMenuItemsMovementAmount = 200;
-const subMenuItemsMovementOffset = 200;
+const subMenuItemsMovementAmount = 250;
+const subMenuItemsMovementOffset = 100;
 let activeMenuItemIndex = 0;
 const menuItemsData = [];
 
@@ -26,13 +26,20 @@ function buildMenuItemsData() {
         //first get sub menu items container
         const subMenuItemContainer = menuItem.querySelector('.sub-menu-item-container');
         const childCount = subMenuItemContainer.children.length;
+
         //get menu item index
         const menuItemIndex = index;
         //assign default active sub menu item index
         //ALL MENU ITEMS MUST HAVE AT LEAST ONE CHILD
         const activeSubMenuItemIndex = 0;
         //push data
-        menuItemsData.push({ childCount, menuItemIndex, activeSubMenuItemIndex, subMenuItemContainer });
+        menuItemsData.push(
+            {
+                childCount,
+                menuItemIndex,
+                activeSubMenuItemIndex,
+                subMenuItemContainer,
+            });
     });
 }
 
@@ -75,7 +82,7 @@ async function moveMenuItemsHorizontally(direction) {
         return;
     }
 
-    if(isTransitioningHorizontally){
+    if (isTransitioningHorizontally) {
         log(LOG_TYPE.WARNING, 'Transitioning');
 
         return;
@@ -102,7 +109,7 @@ async function moveMenuItemsHorizontally(direction) {
 
     // Wait for transition to end
     menuItems.forEach((menuItem) => {
-        menuItem.addEventListener('transitionend', () => {isTransitioningHorizontally = false});
+        menuItem.addEventListener('transitionend', () => { isTransitioningHorizontally = false });
     });
 }
 
@@ -119,7 +126,7 @@ async function moveSubMenuItemsVertically(direction) {
         return;
     }
 
-    if(isTransitioningVertically){
+    if (isTransitioningVertically) {
         log(LOG_TYPE.WARNING, 'Transitioning');
 
         return;
@@ -151,7 +158,7 @@ async function moveSubMenuItemsVertically(direction) {
     });
 
     subMenuItems.forEach((subMenuItem) => {
-        subMenuItem.addEventListener('transitionend', () => {isTransitioningVertically = false});
+        subMenuItem.addEventListener('transitionend', () => { isTransitioningVertically = false });
     });
 }
 
@@ -198,13 +205,20 @@ function updateStyleActiveMenuItem() {
 
     //first remove active class from all menu items
     menuItems.forEach(menuItem => {
-        menuItem.classList.remove('active-menu-item');
-        menuItem.classList.remove('menu-item-active');
+        const menuIconElement = menuItem.querySelector('.menu-item-icon');
+        menuIconElement.classList.remove('active-menu-item-icon');
+
+        const menuItemHeader = menuItem.querySelector('.menu-item-description');
+        menuItemHeader.classList.remove('active-menu-item-description');
+
+        const subMenuItemContainer = menuItem.querySelector('.sub-menu-item-container');
+        subMenuItemContainer.classList.remove('active-sub-menu-item-container');
     })
 
     //add active class to the active menu item
-    menuItems[activeMenuItemIndex].classList.add('active-menu-item');
-    menuItems[activeMenuItemIndex].classList.add('menu-item-active');
+    menuItems[activeMenuItemIndex].querySelector('.menu-item-icon').classList.add('active-menu-item-icon');
+    menuItems[activeMenuItemIndex].querySelector('.menu-item-description').classList.add('active-menu-item-description');
+    menuItems[activeMenuItemIndex].querySelector('.sub-menu-item-container').classList.add('active-sub-menu-item-container');
 }
 
 function updateActiveSubMenuItemStyle() {
@@ -212,12 +226,19 @@ function updateActiveSubMenuItemStyle() {
     const subMenuItems = Array.from(activeMenuItem.subMenuItemContainer.children);
 
     //first remove active class from all menu items
-    subMenuItems.forEach(menuItem => {
-        menuItem.classList.remove('active-sub-menu-item');
+    subMenuItems.forEach(subMenuItem => {
+        //Scale up the active sub menu item icon
+        const subMenuItemIcon = subMenuItem.querySelector('.sub-menu-item-icon');
+        subMenuItemIcon.classList.remove('active-sub-menu-item-icon');
+
+        //Play header text signal animation
+        const subMenuHeader = subMenuItem.querySelector('.sub-menu-item-header');
+        subMenuHeader.classList.remove('active-sub-menu-item-header');
     })
 
     //add active class to the active menu item
-    subMenuItems[activeMenuItem.activeSubMenuItemIndex].classList.add('active-sub-menu-item');
+    subMenuItems[activeMenuItem.activeSubMenuItemIndex].querySelector('.sub-menu-item-icon').classList.add('active-sub-menu-item-icon');
+    subMenuItems[activeMenuItem.activeSubMenuItemIndex].querySelector('.sub-menu-item-header').classList.add('active-sub-menu-item-header');
 }
 
 function toggleStatusBar() {
