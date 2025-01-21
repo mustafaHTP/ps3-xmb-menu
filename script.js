@@ -8,13 +8,14 @@ const DIRECTION = {
     Down: -1
 }
 
+const HORIZONTAL_MOVEMENT_AMOUNT = 200;
+const VERTICAL_MOVEMENT_AMOUNT = 120;
+const VERTICAL_MOVEMENT_OFFSET = 250;
+const NO_SUB_MENU_ITEM_COUNT = -1
+
 let isTransitioningHorizontally = false;
 let isTransitioningVertically = false;
-let isStatusBarVisible = true;
-const menuItemsMovementAmount = 200;
-const subMenuItemsMovementAmount = 120;
-const subMenuItemsMovementOffset = 250;
-const noSubMenuItemCount = -1
+let isStatusBarVisible = false;
 let activeMenuItemIndex = 0;
 const menuItemsData = [];
 
@@ -28,7 +29,7 @@ function buildMenuItemsData() {
         const subMenuItemContainer = menuItem.querySelector('.sub-menu-item-container');
         let subMenuItemCount = subMenuItemContainer ?
             subMenuItemContainer.children.length
-            : noSubMenuItemCount;
+            : NO_SUB_MENU_ITEM_COUNT;
 
         //get menu item index
         const menuItemIndex = index;
@@ -107,7 +108,7 @@ async function moveMenuItemsHorizontally(direction) {
 
     menuItems.forEach((menuItem) => {
         const currentTranslateX = getTranslateX(menuItem);
-        menuItem.style.transform = `translateX(${currentTranslateX + (menuItemsMovementAmount * -direction)}px)`;
+        menuItem.style.transform = `translateX(${currentTranslateX + (HORIZONTAL_MOVEMENT_AMOUNT * -direction)}px)`;
     });
 
     await waitForAllTransitions(menuItems);
@@ -122,7 +123,7 @@ async function moveSubMenuItemsVertically(direction) {
     const activeSubMenuItemIndex = activeMenuItem.activeSubMenuItemIndex;
 
     //Check if menu item has sub menu items
-    if (!activeMenuItem.subMenuItemCount === noSubMenuItemCount) {
+    if (!activeMenuItem.subMenuItemCount === NO_SUB_MENU_ITEM_COUNT) {
         log(LOG_TYPE.WARNING, 'No sub menu items');
 
         return;
@@ -160,8 +161,8 @@ async function moveSubMenuItemsVertically(direction) {
         }
         const applyOffset = index === applyOffsetIndex;
         let transformAmount = applyOffset ?
-            currentTranslateY + ((subMenuItemsMovementAmount + subMenuItemsMovementOffset) * direction)
-            : currentTranslateY + (subMenuItemsMovementAmount * direction);
+            currentTranslateY + ((VERTICAL_MOVEMENT_AMOUNT + VERTICAL_MOVEMENT_OFFSET) * direction)
+            : currentTranslateY + (VERTICAL_MOVEMENT_AMOUNT * direction);
         selectionItem.style.transform = `translateY(${transformAmount}px)`;
     });
 
@@ -243,7 +244,7 @@ function updateStyleActiveMenuItem() {
 function updateActiveSubMenuItemStyle() {
 
     const activeMenuItem = getActiveMenuItem();
-    if (activeMenuItem.subMenuItemCount === noSubMenuItemCount) {
+    if (activeMenuItem.subMenuItemCount === NO_SUB_MENU_ITEM_COUNT) {
         log(LOG_TYPE.WARNING, 'No sub menu items');
 
         return;
