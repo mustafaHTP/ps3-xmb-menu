@@ -104,7 +104,6 @@ async function moveMenuItemsHorizontally(direction) {
 
     // Get all menu items
     const menuItems = document.querySelectorAll('.menu-item');
-    console.log(menuItems);
 
     menuItems.forEach((menuItem) => {
         const currentTranslateX = getTranslateX(menuItem);
@@ -130,7 +129,7 @@ async function moveSubMenuItemsVertically(direction) {
     }
 
     if (!(direction === DIRECTION.Down && activeSubMenuItemIndex < subMenuItemsCount - 1 || direction === DIRECTION.Up && activeSubMenuItemIndex > 0)) {
-        console.log('Can not move vertically');
+        log(LOG_TYPE.WARNING, 'Can not move vertically');
 
         return;
     }
@@ -218,31 +217,18 @@ function updateStatusBar() {
 function updateStyleActiveMenuItem() {
     const menuItems = document.querySelectorAll('.menu-item');
 
-    //first remove active class from all menu items
+    // remove active class from all menu items
     menuItems.forEach(menuItem => {
-        const menuIconElement = menuItem.querySelector('.menu-item-icon');
-        menuIconElement.classList.remove('active-menu-item-icon');
-
-        const menuItemHeader = menuItem.querySelector('.menu-item-description');
-        menuItemHeader.classList.remove('active-menu-item-description');
-
-        //check if menu item has sub menu items
-        const subMenuItemContainer = menuItem.querySelector('.sub-menu-item-container');
-        if (subMenuItemContainer) {
-            subMenuItemContainer.classList.remove('active-sub-menu-item-container');
-        }
+        menuItem.classList.remove('active-menu-item');
     })
 
-    //add active class to the active menu item
-    menuItems[activeMenuItemIndex].querySelector('.menu-item-icon').classList.add('active-menu-item-icon');
-    menuItems[activeMenuItemIndex].querySelector('.menu-item-description').classList.add('active-menu-item-description');
-    if (menuItems[activeMenuItemIndex].querySelector('.sub-menu-item-container')) {
-        menuItems[activeMenuItemIndex].querySelector('.sub-menu-item-container').classList.add('active-sub-menu-item-container');
-    }
+    // add active class to the active menu item
+    menuItems[activeMenuItemIndex].classList.add('active-menu-item');
 }
 
 function updateActiveSubMenuItemStyle() {
 
+    //Get active menu item
     const activeMenuItem = getActiveMenuItem();
     if (activeMenuItem.subMenuItemCount === NO_SUB_MENU_ITEM_COUNT) {
         log(LOG_TYPE.WARNING, 'No sub menu items');
@@ -250,22 +236,16 @@ function updateActiveSubMenuItemStyle() {
         return;
     }
 
+    //Get all sub menu items
     const subMenuItems = Array.from(activeMenuItem.subMenuItemContainer.children);
 
-    //first remove active class from all menu items
+    //Remove active class from all menu items
     subMenuItems.forEach(subMenuItem => {
-        //Scale up the active sub menu item icon
-        const subMenuItemIcon = subMenuItem.querySelector('.sub-menu-item-icon');
-        subMenuItemIcon.classList.remove('active-sub-menu-item-icon');
-
-        //Play header text signal animation
-        const subMenuHeader = subMenuItem.querySelector('.sub-menu-item-header');
-        subMenuHeader.classList.remove('active-sub-menu-item-header');
+        subMenuItem.classList.remove('active-sub-menu-item');
     })
 
-    //add active class to the active menu item
-    subMenuItems[activeMenuItem.activeSubMenuItemIndex].querySelector('.sub-menu-item-icon').classList.add('active-sub-menu-item-icon');
-    subMenuItems[activeMenuItem.activeSubMenuItemIndex].querySelector('.sub-menu-item-header').classList.add('active-sub-menu-item-header');
+    //Add active class to the active menu item
+    subMenuItems[activeMenuItem.activeSubMenuItemIndex].classList.add('active-sub-menu-item');
 }
 
 function toggleStatusBar() {
@@ -278,7 +258,7 @@ function getActiveMenuItem() {
     return menuItemsData.find(item => item.menuItemIndex === activeMenuItemIndex);
 }
 
-function waitForAllTransitions(elements){
+function waitForAllTransitions(elements) {
     return new Promise((resolve) => {
         let completedTransitions = 0;
         const totalTransitions = elements.length;
@@ -297,5 +277,31 @@ function waitForAllTransitions(elements){
     });
 }
 
+/**
+ * Setup active menu item at startup
+ */
+function setupActiveMenuItem() {
+    const activeMenuItem = document.querySelector('.menu-item');
+    activeMenuItem.classList.add('active-menu-item');
+}
+
+/**
+ * Setup active sub menu items at startup
+ */
+function setupActiveSubMenuItems() {
+    const menuItems = document.querySelectorAll('.menu-item');
+    menuItems.forEach((menuItem) => {
+        const subMenuItemContainer = menuItem.querySelector('.sub-menu-item-container');
+        //Check if menu item has sub menu items
+        if (!subMenuItemContainer && subMenuItemContainer.children.length === 0) {
+            return;
+        }
+        const firstSubMenuItem = subMenuItemContainer.children[0];
+        firstSubMenuItem.classList.add('active-sub-menu-item');
+    });
+}
+
 buildMenuItemsData();
 addBodyListener();
+setupActiveMenuItem();
+setupActiveSubMenuItems();

@@ -3,7 +3,7 @@ body {
     overflow: hidden;
 }
 
-.showcase {
+.main-container {
     height: 100vh;
     display: flex;
     align-items: center;
@@ -78,10 +78,6 @@ body {
     justify-content: center;
 }
 
-.active-sub-menu-item-container {
-    display: flex;
-}
-
 .menu-item-header {
     position: absolute;
     top: 10%;
@@ -99,17 +95,8 @@ body {
     animation-play-state: paused;
 }
 
-.active-menu-item-icon {
-    opacity: 1;
-    transform: scale(1.2);
-}
-
 .menu-item-description {
     display: none;
-}
-
-.active-menu-item-description {
-    display: block;
 }
 
 .sub-menu-item {
@@ -134,32 +121,49 @@ body {
 .sub-menu-item-header {
     animation-play-state: paused;
     opacity: 0.5;
+    margin-left: 50px;
 }
 
-.active-sub-menu-item-icon {
+/* Active Menu Item */
+
+.active-menu-item{} /* Just for mark active menu item*/
+
+.active-menu-item .menu-item-icon {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.active-menu-item .menu-item-description {
+    display: block;
+}
+
+.active-menu-item .sub-menu-item-container {
+    display: flex;
+}
+/* END - Active Menu Item*/
+
+/* Active Sub Menu Item*/
+
+.active-sub-menu-item{} /* Just for mark active sub menu item*/
+
+.active-sub-menu-item .sub-menu-item-icon {
     opacity: 1;
     transform: scale(1.5);
 }
 
-.sub-menu-item-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-left: 30px;
-}
-
-.active-sub-menu-item-header {
+.active-sub-menu-item .sub-menu-item-header{
     animation: signal 2s infinite;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-play-state: running;
     opacity: 1;
 }
+/* END - Active Sub Menu Item*/
 
 /* STATUS BAR */
 
 .status-bar {
+    display: none;
     position: fixed;
     width: 100%;
     color: white;
