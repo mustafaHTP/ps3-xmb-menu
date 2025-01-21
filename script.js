@@ -204,9 +204,14 @@ function changeActiveSubMenuItemIndex(direction) {
 }
 
 function updateStatusBar() {
-    //Update selected menu item index display
-    const selectedMenuItemIndexDisplay = document.querySelector('#active-menu-item-index-display');
-    selectedMenuItemIndexDisplay.innerHTML = activeMenuItemIndex;
+    //Update active menu item index display
+    const activeMenuItemIndexDisplay = document.querySelector('#active-menu-item-index-display');
+    activeMenuItemIndexDisplay.innerHTML = activeMenuItemIndex;
+
+    //Update active sub menu item index display
+    const activeSubMenuItemIndexDisplayElement = document.querySelector('#active-sub-menu-item-index-display');
+    const activeMenuItem = getActiveMenuItem();
+    activeSubMenuItemIndexDisplayElement.innerHTML = activeMenuItem.activeSubMenuItemIndex;
 }
 
 function updateStyleActiveMenuItem() {
@@ -293,5 +298,3 @@ function waitForAllTransitions(elements){
 
 buildMenuItemsData();
 addBodyListener();
-
-log(LOG_TYPE.INFO, 'Script loaded');
