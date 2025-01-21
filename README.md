@@ -13,7 +13,7 @@ A recreation of the PlayStation 3 XMB (XrossMediaBar) menu interface using HTML,
 
 ### Font
 
-* Source: Online Web Fonts
+* Source: [SCE-PS3 Rodin LATIN Regular](https://www.onlinewebfonts.com/download/3c9a33e9913448d684afff5b4b0cc59c)
 
 ### Icons
 
