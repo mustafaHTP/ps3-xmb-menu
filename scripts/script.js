@@ -19,24 +19,28 @@ let isStatusBarVisible = false;
 let activeMenuItemIndex = 0;
 const menuItemsData = [];
 
+/**
+ * Builds menu items data. 
+ * It is used to keep track of menu items and sub menu items
+ */
 function buildMenuItemsData() {
-    //Get all menu items
+    // Get all menu items
     const menuItems = document.querySelectorAll('.menu-item');
 
     menuItems.forEach((menuItem, index) => {
-        //get child count
-        //first get sub menu items container
+        // Get sub menu item count
+        // First get sub menu items container
         const subMenuItemContainer = menuItem.querySelector('.sub-menu-item-container');
         let subMenuItemCount = subMenuItemContainer ?
             subMenuItemContainer.children.length
             : NO_SUB_MENU_ITEM_COUNT;
 
-        //get menu item index
+        // Get menu item index
         const menuItemIndex = index;
-        //assign default active sub menu item index
-        //ALL MENU ITEMS MUST HAVE AT LEAST ONE CHILD
+        // By default active sub menu item index is 0
+        // This is used to keep track of active sub menu item index
         const activeSubMenuItemIndex = 0;
-        //push data
+
         menuItemsData.push(
             {
                 subMenuItemCount,
@@ -47,6 +51,10 @@ function buildMenuItemsData() {
     });
 }
 
+/**
+ * Adds event listener to the body
+ * All interactions are handled here
+ */
 function addBodyListener() {
     document.body.addEventListener('keydown', async (event) => {
 
@@ -92,6 +100,7 @@ async function moveMenuItemsHorizontally(direction) {
         return;
     }
 
+    // Start transitioning
     isTransitioningHorizontally = true;
 
     // Change active menu item index
@@ -110,13 +119,14 @@ async function moveMenuItemsHorizontally(direction) {
         menuItem.style.transform = `translateX(${currentTranslateX + (HORIZONTAL_MOVEMENT_AMOUNT * -direction)}px)`;
     });
 
+    // Wait for the transition to complete
     await waitForAllTransitions(menuItems);
+
+    // End transitioning
     isTransitioningHorizontally = false;
 }
 
 async function moveSubMenuItemsVertically(direction) {
-    //Check can move vertically
-    //First active sub menu item index
     const activeMenuItem = menuItemsData.find(item => item.menuItemIndex === activeMenuItemIndex);
     const subMenuItemsCount = activeMenuItem.subMenuItemCount;
     const activeSubMenuItemIndex = activeMenuItem.activeSubMenuItemIndex;
@@ -140,6 +150,7 @@ async function moveSubMenuItemsVertically(direction) {
         return;
     }
 
+    //Start transitioning
     isTransitioningVertically = true;
 
     changeActiveSubMenuItemIndex(direction);
@@ -168,15 +179,26 @@ async function moveSubMenuItemsVertically(direction) {
     // Wait for the transition to complete
     await waitForAllTransitions(subMenuItems);
 
+    //End transitioning
     isTransitioningVertically = false;
 }
 
+/**
+ * 
+ * @param {Element} element 
+ * @returns x coordinate of the element
+ */
 function getTranslateX(element) {
     const style = window.getComputedStyle(element);
     const matrix = new WebKitCSSMatrix(style.transform);
     return matrix.m41;
 }
 
+/**
+ * 
+ * @param {Element} element 
+ * @returns y coordinate of the element
+ */
 function getTranslateY(element) {
     const style = window.getComputedStyle(element);
     const matrix = new WebKitCSSMatrix(style.transform);
@@ -192,8 +214,7 @@ function changeActiveMenuItemIndex(direction) {
 }
 
 function changeActiveSubMenuItemIndex(direction) {
-    //Check can move vertically
-    //First active sub menu item index
+    //Get active sub menu item index
     const activeMenuItem = menuItemsData.find(item => item.menuItemIndex === activeMenuItemIndex);
 
     if (direction === DIRECTION.Down) {
@@ -258,6 +279,13 @@ function getActiveMenuItem() {
     return menuItemsData.find(item => item.menuItemIndex === activeMenuItemIndex);
 }
 
+/**
+ * waits for all transitions to complete
+ * !IMPORTANT!: If all transitions are not awaited, 
+ * this causes some elements not position correctly. 
+ * Very crucial function for the transitions.
+ * @param {any[]} elements 
+ */
 function waitForAllTransitions(elements) {
     return new Promise((resolve) => {
         let completedTransitions = 0;
@@ -293,7 +321,7 @@ function setupActiveSubMenuItems() {
     menuItems.forEach((menuItem) => {
         const subMenuItemContainer = menuItem.querySelector('.sub-menu-item-container');
         //Check if menu item has sub menu items
-        if (!subMenuItemContainer && subMenuItemContainer.children.length === 0) {
+        if (!subMenuItemContainer || subMenuItemContainer.children.length === 0) {
             return;
         }
         const firstSubMenuItem = subMenuItemContainer.children[0];
