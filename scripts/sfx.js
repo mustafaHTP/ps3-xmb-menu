@@ -1,6 +1,6 @@
 async function playClick() {
-    const audio = new Audio('/assets/sound/click.wav');
+    const audio = new Audio('assets/sound/click.wav');
     await audio.play();
 }
 
-export { playClick};
+export { playClick };
