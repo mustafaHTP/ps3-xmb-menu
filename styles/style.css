@@ -44,9 +44,9 @@ body {
 }
 
 .menu-container {
-    position: relative;
-    top: 15%;
-    left: 30%;
+    position: absolute;
+    top: 25vh;
+    left: 30vw;
     display: flex;
     justify-content: center;
     align-items: center;
